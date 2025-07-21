@@ -11,10 +11,4 @@ Este proyecto permite predecir actividades financieras lícitas o sospechosas ut
 - Gunicorn (para despliegue)
 - Render.com / Heroku
 
-## 📦 Instalación
 
-```bash
-git clone https://github.com/tuusuario/modelo-predictivo.git
-cd modelo-predictivo
-pip install -r requirements.txt
-python src/app.py
