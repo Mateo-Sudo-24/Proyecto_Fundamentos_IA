@@ -1,53 +1,68 @@
-<!-- templates/index.html -->
+<!-- templates/index.html CORREGIDO -->
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predicción con Modelos de IA</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, select, button { width: 100%; padding: 10px; box-sizing: border-box; }
-        .result, .error { padding: 15px; margin-top: 20px; border-radius: 5px; }
-        .result { background-color: #e0f0e0; border: 1px solid #a0c0a0; }
-        .error { background-color: #f0e0e0; border: 1px solid #c0a0a0; color: #a00; }
-    </style>
+    <title>Detector de Actividad Lícita</title>
 </head>
 <body>
-    <h1>Herramienta de Predicción</h1>
-
+    <h1>Detector de Actividad Financiera</h1>
     <form method="POST">
-        <div class="form-group">
-            <label for="dato">Ingrese el dato a predecir:</label>
-            <input type="number" step="any" id="dato" name="dato" required>
-        </div>
-        <div class="form-group">
-            <label for="modelo">Seleccione el modelo:</label>
-            <select id="modelo" name="modelo">
-                <option value="logistica">Regresión Logística</option>
-                <option value="arbol">Árbol de Decisión</option>
-            </select>
-        </div>
+        <!-- Campos para variables numéricas -->
+        <label for="sumValTot">Suma del Valor Total:</label><br>
+        <input type="number" step="any" id="sumValTot" name="sumValTot" required><br><br>
+
+        <label for="Frecuencia">Frecuencia:</label><br>
+        <input type="number" id="Frecuencia" name="Frecuencia" required><br><br>
+
+        <label for="edad">Edad:</label><br>
+        <input type="number" id="edad" name="edad" required><br><br>
+
+        <label for="nivelIngresos">Nivel de Ingresos:</label><br>
+        <input type="number" step="any" id="nivelIngresos" name="nivelIngresos" required><br><br>
+
+        <!-- Campos para variables categóricas -->
+        <label for="estadoCivil">Estado Civil:</label><br>
+        <select id="estadoCivil" name="estadoCivil">
+            <option value="S">Soltero</option>
+            <option value="C">Casado</option>
+            <option value="D">Divorciado</option>
+            <option value="V">Viudo</option>
+            <option value="U">Unión Libre</option>
+        </select><br><br>
+
+        <label for="nivelEducacion">Nivel de Educación:</label><br>
+        <input type="text" id="nivelEducacion" name="nivelEducacion" required><br><br>
+
+        <label for="sexo">Sexo:</label><br>
+        <select id="sexo" name="sexo">
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+        </select><br><br>
+
+        <label for="tipoVivienda">Tipo de Vivienda:</label><br>
+        <input type="text" id="tipoVivienda" name="tipoVivienda" required><br><br>
+
+        <!-- Selección del modelo -->
+        <label for="modelo">Seleccione el modelo:</label><br>
+        <select id="modelo" name="modelo">
+            <option value="logistica">Regresión Logística</option>
+            <option value="arbol">Árbol de Decisión</option>
+        </select><br><br>
+
         <button type="submit">Predecir</button>
     </form>
 
-    <!-- 1. Bloque para mostrar errores de forma clara -->
-    {% if error_msg %}
-    <div class="error">
-        <strong>Error:</strong> {{ error_msg }}
-    </div>
-    {% endif %}
-
-    <!-- 2. Bloque mejorado para mostrar el resultado solo si existe -->
     {% if prediccion is not none %}
-    <div class="result">
-        <p>Se utilizó el modelo: <strong>{{ modelo_usado }}</strong></p>
-        <p>El resultado de la predicción es: <strong>{{ prediccion }}</strong></p>
-    </div>
+        <h2>Resultado de la Predicción ({{ modelo_usado }}):</h2>
+        <p>
+            {% if prediccion == 1 %}
+                Actividad Sospechosa (UAFE)
+            {% else %}
+                Actividad No Sospechosa
+            {% endif %}
+        </p>
     {% endif %}
-
 </body>
 </html>
