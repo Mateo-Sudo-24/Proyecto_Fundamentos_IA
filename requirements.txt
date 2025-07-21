@@ -2,7 +2,7 @@ Flask==2.3.2
 gunicorn==21.2.0
 numpy #(sin versión especificada)
 pandas==2.2.3
-scikit-learn==1.4.2
+scikit-learn==1.6.1
 matplotlib==3.8.4
 seaborn==0.13.2
 openpyxl==3.1.2
