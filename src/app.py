@@ -1,49 +1,56 @@
-# NUEVO CÓDIGO DE PREPROCESAMIENTO Y ENTRENAMIENTO
+# app.py CORREGIDO
 
-from sklearn.model_selection import train_test_split
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.pipeline import Pipeline
-import pandas as pd
+from flask import Flask, render_template, request
 import joblib
+import pandas as pd
 
-# 1. Definir las características ANTES del encoding
-X = df.drop(columns=['Uafe', 'codigoCliente'])
-y = df['Uafe']
+app = Flask(__name__)
 
-# 2. Identificar tipos de columnas
-numeric_features = ['sumValTot', 'Frecuencia', 'edad', 'nivelIngresos']
-categorical_features = ['estadoCivil', 'nivelEducacion', 'sexo', 'tipoVivienda']
+# Cargar los modelos que ahora contienen el preprocesador
+modelo_logistica = joblib.load('models/pipeline_regresion_logistica.pkl')
+modelo_arbol = joblib.load('models/pipeline_arbol_decision.pkl')
 
-# 3. Crear el preprocesador con ColumnTransformer
-#    - Escala las numéricas
-#    - Aplica One-Hot Encoding a las categóricas
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('num', StandardScaler(), numeric_features),
-        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features)
-    ])
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    prediccion = None
+    modelo_usado = None
 
-# 4. Dividir los datos ANTES de cualquier transformación
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    if request.method == 'POST':
+        try:
+            # 1. Recopilar todos los datos del formulario
+            datos_formulario = {
+                'sumValTot': [float(request.form['sumValTot'])],
+                'Frecuencia': [int(request.form['Frecuencia'])],
+                'edad': [int(request.form['edad'])],
+                'nivelIngresos': [float(request.form['nivelIngresos'])],
+                'estadoCivil': [request.form['estadoCivil']],
+                'nivelEducacion': [request.form['nivelEducacion']],
+                'sexo': [request.form['sexo']],
+                'tipoVivienda': [request.form['tipoVivienda']]
+            }
+            
+            # 2. Crear un DataFrame de Pandas
+            input_df = pd.DataFrame(datos_formulario)
+            
+            tipo_modelo = request.form['modelo']
+            
+            # 3. Hacer la predicción con el DataFrame
+            # El pipeline se encargará del escalado y el one-hot encoding automáticamente
+            if tipo_modelo == 'logistica':
+                prediccion_array = modelo_logistica.predict(input_df)
+                prediccion = prediccion_array[0]
+                modelo_usado = "Regresión Logística"
+            elif tipo_modelo == 'arbol':
+                prediccion_array = modelo_arbol.predict(input_df)
+                prediccion = prediccion_array[0]
+                modelo_usado = "Árbol de Decisión"
+                
+        except Exception as e:
+            # Puedes manejar el error de forma más específica si quieres
+            print(f"Error durante la predicción: {e}")
+            prediccion = -1 # Un valor para indicar error
 
-# --- Modelo de Regresión Logística ---
-pipeline_r = Pipeline(steps=[('preprocessor', preprocessor),
-                           ('classifier', LogisticRegression(max_iter=1000))])
+    return render_template('index.html', prediccion=prediccion, modelo_usado=modelo_usado)
 
-print("Entrenando Regresión Logística...")
-pipeline_r.fit(X_train, y_train)
-joblib.dump(pipeline_r, 'models/pipeline_regresion_logistica.pkl')
-print("¡Pipeline de Regresión Logística guardado!")
-
-
-# --- Modelo de Árbol de Decisión ---
-pipeline_dt = Pipeline(steps=[('preprocessor', preprocessor),
-                            ('classifier', DecisionTreeClassifier(max_depth=5, random_state=42))])
-
-print("\nEntrenando Árbol de Decisión...")
-pipeline_dt.fit(X_train, y_train)
-joblib.dump(pipeline_dt, 'models/pipeline_arbol_decision.pkl')
-print("¡Pipeline de Árbol de Decisión guardado!")
+if __name__ == '__main__':
+    app.run(debug=True)
