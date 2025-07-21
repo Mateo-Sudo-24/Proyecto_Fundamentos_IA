@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Modelo Predictivo de Actividad Licita</title>
+</head>
+<body>
+  <header>
+    <h1>Modelo Predictivo de Actividad Licita</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Predicción</h2>
+      <form method="POST" action="/">
+        <label for="dato">Ingrese el valor:</label>
+        <input type="number" name="dato" step="any" required>
+
+        <label for="modelo">Seleccione el modelo:</label>
+        <select name="modelo" required>
+            <option value="logistica">Regresión Logística</option>
+            <option value="arbol">Árbol de Decisión</option>
+        </select>
+
+        <button type="submit">Predecir</button>
+        </form>
+
+        {% if prediccion is not none %}
+        <p><strong>Modelo usado:</strong> {{ modelo_usado }}</p>
+        <p><strong>Resultado:</strong> {{ prediccion[0] }}</p>
+        {% endif %}
+    </section>
+
+    <section>
+      <h2>Objetivo del Proyecto</h2>
+      <p>
+        Este proyecto tiene como objetivo identificar actividades financieras sospechosas mediante algoritmos de Machine Learning como regresión logística.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Joseph Changoluisa Jhonn Lugmaña Mateo Paredes</p>
+  </footer>
+
+  <!-- Chatbot Web Integration (Botpress ejemplo) -->
+  <script>
+    window.botpressWebChat = {
+      host: "https://tu-url-de-botpress.com",
+      botId: "nombre-del-bot",
+      enableReset: true,
+      showCloseButton: true,
+      stylesheet: "https://tu-url-de-css-del-botpress-webchat.com"
+    };
+  </script>
+  <script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
+</body>
+</html>
