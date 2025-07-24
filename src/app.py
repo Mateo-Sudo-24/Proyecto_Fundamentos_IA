@@ -4,11 +4,13 @@ from flask import Flask, render_template, request
 import joblib
 import pandas as pd
 
-app = Flask(__name__)
+# ...existing code...
+app = Flask(__name__, template_folder="templates")
 
 # Cargar los modelos que ahora contienen el preprocesador
-modelo_logistica = joblib.load('models/pipeline_regresion_logistica.pkl')
-modelo_arbol = joblib.load('models/pipeline_arbol_decision.pkl')
+modelo_logistica = joblib.load('../models/pipeline_regresion_logistica.pkl')
+modelo_arbol = joblib.load('../models/pipeline_arbol_decision.pkl')
+# ...existing code...
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
