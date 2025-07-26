@@ -7,9 +7,10 @@ import pandas as pd
 # ...existing code...
 app = Flask(__name__, template_folder="templates")
 
-# Cargar los modelos que ahora contienen el preprocesador
-modelo_logistica = joblib.load('../models/pipeline_regresion_logistica.pkl')
-modelo_arbol = joblib.load('../models/pipeline_arbol_decision.pkl')
+
+# ...existing code...ar los modelos que ahora contienen el preprocesador
+modelo_logistica = joblib.load('models/pipeline_regresion_logistica.pkl')
+modelo_arbol = joblib.load('models/pipeline_arbol_decision.pkl')
 # ...existing code...
 
 @app.route('/', methods=['GET', 'POST'])
