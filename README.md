@@ -12,7 +12,7 @@ Este servicio expone el modelo de Machine Learning para que pueda ser consumido 
 ## 2. Estructura del Repositorio de Despliegue
 
 - **`/` (raíz)**:
-  - **`predict.py` (o `app.py`)**: Script principal para cargar el modelo y realizar predicciones. Puede ser un script de línea de comandos o una API web (usando Flask, FastAPI, etc.).
+  - **`app.py`)**: Script principal para cargar el modelo y realizar predicciones. Puede ser un script de línea de comandos o una API web (usando Flask, FastAPI, etc.).
   - **`requirements.txt`**: Un listado de las dependencias de Python necesarias para ejecutar el script de predicción.
   - **`README.md`**: Este archivo.
 - **`/models/`**:
