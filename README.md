@@ -44,7 +44,7 @@ Este servicio expone el modelo de Machine Learning para que pueda ser consumido 
 
 El siguiente es un ejemplo de cómo podría ser el script `predict.py` para cargar el modelo y usarlo.
 
-**Archivo `predict.py`:**
+**Archivo `app.py`:**
 ```python
 import pandas as pd
 import joblib
@@ -102,19 +102,13 @@ if __name__ == '__main__':
     print(f"  - Etiqueta Predicha: {resultado_prediccion['etiqueta']}")
     print(f"  - Valor Predicho: {resultado_prediccion['prediccion']}")
     print(f"  - Probabilidad de ser Sospechosa: {resultado_prediccion['probabilidad_sospechosa']:.2%}")
-Use code with caution.
-Markdown
-Para ejecutar el script:
-Generated bash
-python predict.py
-Use code with caution.
-Bash
+```
+
+
 Formato de Entrada y Salida
 Entrada: Un DataFrame de Pandas con las columnas requeridas (sumValTot, Frecuencia, edad, estadoCivil, nivelEducacion, sexo, tipoVivienda, nivelIngresos).
 Salida: Un diccionario que contiene:
 prediccion: 0 para "No Sospechosa", 1 para "Sospechosa".
 etiqueta: La etiqueta de texto correspondiente.
 probabilidad_sospechosa: Un valor flotante entre 0 y 1 que indica la confianza del modelo en la predicción de "Sospechosa".
-Notas sobre Despliegue Avanzado
-API Web: El script predict.py puede ser fácilmente adaptado para funcionar como un endpoint en una API REST utilizando frameworks como Flask o FastAPI.
-Contenerización: Para un despliegue más robusto y escalable, se recomienda empaquetar la aplicación en un contenedor Docker.
+
