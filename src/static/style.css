@@ -169,33 +169,53 @@ footer {
     color: #2c3e50;
 }
 
-/* Chatbot flotante estilo Messenger */
+/* Chatbot mejorado */
+#botpress-chatbot-container {
+    position: fixed;
+    right: 20px;
+    bottom: 90px;
+    width: 350px;
+    height: 500px;
+    z-index: 1001;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateY(20px);
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+#botpress-chatbot-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
 .chatbot {
     position: fixed;
     bottom: 20px;
     right: 20px;
     width: 60px;
     height: 60px;
-    background: #0084ff; /* Azul sólido estilo Messenger */
+    background: #0084ff;
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.3s ease;
+    z-index: 1002;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 20px rgba(0, 132, 255, 0.4);
-    z-index: 1000;
+    transition: all 0.3s ease;
 }
 
 .chatbot:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 6px 25px rgba(0, 132, 255, 0.6);
+    transform: scale(1.1);
 }
 
 .chatbot-icon {
     width: 35px;
     height: 35px;
-    margin-right: 0;
     background: white;
     border-radius: 50%;
     padding: 4px;

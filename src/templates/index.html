@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detector de Actividad Financiera</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
@@ -15,29 +15,29 @@
 
         <section>
             <p>
-                Este sistema permite ingresar datos financieros y personales básicos para detectar si una actividad puede considerarse sospechosa,
+                Este sistema permite ingresar datos financieros y personales básicos para detectar si una actividad puede considerarse sospechosa, 
                 siguiendo criterios como los de la UAFE. Utiliza modelos de inteligencia artificial como regresión logística y árboles de decisión.
             </p>
 
             <form action="/" method="POST" id="predictionForm">
                 <div class="form-group">
                     <label for="sumValTot">💰 Suma del Valor Total:</label>
-                    <input type="number" id="sumValTot" name="sumValTot" required min="0" step="0.01" placeholder="Ingrese el monto" />
+                    <input type="number" id="sumValTot" name="sumValTot" required min="0" step="0.01" placeholder="Ingrese el monto">
                 </div>
 
                 <div class="form-group">
-                    <label for="Frecuencia">📊 Frecuencia:</label>
-                    <input type="number" id="Frecuencia" name="Frecuencia" required min="1" placeholder="Número de transacciones" />
+                    <label for="frecuencia">📊 Frecuencia:</label>
+                    <input type="number" id="frecuencia" name="frecuencia" required min="1" placeholder="Número de transacciones">
                 </div>
 
                 <div class="form-group">
                     <label for="edad">👤 Edad:</label>
-                    <input type="number" id="edad" name="edad" required min="18" max="100" placeholder="Edad del usuario" />
+                    <input type="number" id="edad" name="edad" required min="18" max="100" placeholder="Edad del usuario">
                 </div>
 
                 <div class="form-group">
                     <label for="nivelIngresos">💼 Nivel de Ingresos:</label>
-                    <input type="number" id="nivelIngresos" name="nivelIngresos" required step="0.01" placeholder="Ej: 10000" />
+                    <input type="text" id="nivelIngresos" name="nivelIngresos" required placeholder="Ej: Alto, Medio, Bajo">
                 </div>
 
                 <div class="form-group">
@@ -52,7 +52,7 @@
 
                 <div class="form-group">
                     <label for="nivelEducacion">🎓 Nivel de Educación:</label>
-                    <input type="text" id="nivelEducacion" name="nivelEducacion" required placeholder="Ej: Universitario, Secundario" />
+                    <input type="text" id="nivelEducacion" name="nivelEducacion" required placeholder="Ej: Universitario, Secundario">
                 </div>
 
                 <div class="form-group">
@@ -66,7 +66,7 @@
 
                 <div class="form-group">
                     <label for="tipoVivienda">🏠 Tipo de Vivienda:</label>
-                    <input type="text" id="tipoVivienda" name="tipoVivienda" required placeholder="Ej: Propia, Alquilada" />
+                    <input type="text" id="tipoVivienda" name="tipoVivienda" required placeholder="Ej: Propia, Alquilada">
                 </div>
 
                 <div class="form-group">
@@ -88,13 +88,11 @@
 
             {% if prediccion is not none %}
             <div class="prediction {% if prediccion == 1 %}alerta{% else %}normal{% endif %}">
-                <strong>Resultado de la Predicción ({{ modelo_usado }}):</strong><br />
+                <strong>Resultado de la Predicción ({{ modelo_usado }}):</strong><br>
                 {% if prediccion == 1 %}
                     🚨 Actividad Sospechosa (UAFE)
-                {% elif prediccion == 0 %}
-                    ✅ Actividad No Sospechosa
                 {% else %}
-                    ⚠️ Error en la predicción
+                    ✅ Actividad No Sospechosa
                 {% endif %}
             </div>
             {% endif %}
@@ -102,109 +100,25 @@
     </div>
 
     <footer>
-        <p>© 2025 Detector Financiero</p>
+        <p>© 2025 Detector Financiero </p>
     </footer>
 
-    <!-- Burbuja flotante del chatbot -->
-    <div id="chatbotBtn" 
-         style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: #4b79a1; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-        <img src="{{ url_for('static', filename='icon.png') }}" alt="Chatbot" style="width: 28px; height: 28px;" />
-    </div>
-
-    <!-- Ventana de chat oculta inicialmente -->
-    <div id="chatWindow" 
-         style="display: none; position: fixed; bottom: 80px; right: 20px; width: 320px; height: 420px; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.3); flex-direction: column; z-index: 1000; overflow: hidden;">
-        <div id="chatHeader" 
-             style="background: #4b79a1; color: white; padding: 10px; font-weight: bold; border-top-left-radius: 8px; border-top-right-radius: 8px; cursor: pointer;">
-            Asistente Virtual (clic para cerrar)
-        </div>
-        <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 10px; font-size: 14px; background: #f9f9f9;"></div>
-        <div style="display: flex; border-top: 1px solid #ccc;">
-            <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." 
-                style="flex: 1; border: none; padding: 10px; font-size: 16px; outline: none" />
-            <button id="chatSendBtn" 
-                style="background: #4b79a1; color: white; border: none; padding: 10px 20px; cursor: pointer;">
-                Enviar
-            </button>
-        </div>
-    </div>
+    <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js" defer></script>
+    <script src="https://files.bpcontent.cloud/2025/06/30/22/20250630222311-7C66C4KE.js" defer></script>
 
     <script>
-        // Validaciones de inputs numéricos
-        document.getElementById("sumValTot").addEventListener("input", function () {
+        // Aquí solo mantenemos la lógica de tu formulario
+        document.getElementById('sumValTot').addEventListener('input', function() {
             if (this.value < 0) this.value = 0;
         });
 
-        document.getElementById("edad").addEventListener("input", function () {
+        document.getElementById('edad').addEventListener('input', function() {
             if (this.value < 18) this.value = 18;
             if (this.value > 100) this.value = 100;
         });
 
-        // Mostrar loading mientras se procesa el formulario
-        document.getElementById("predictionForm").addEventListener("submit", function () {
-            document.getElementById("loading").style.display = "block";
-        });
-
-        // Funcionalidad chatbot
-        const chatbotBtn = document.getElementById("chatbotBtn");
-        const chatWindow = document.getElementById("chatWindow");
-        const chatHeader = document.getElementById("chatHeader");
-        const chatMessages = document.getElementById("chatMessages");
-        const chatInput = document.getElementById("chatInput");
-        const chatSendBtn = document.getElementById("chatSendBtn");
-
-        chatbotBtn.onclick = () => {
-            chatWindow.style.display = "flex";
-            chatInput.focus();
-        };
-
-        chatHeader.onclick = () => {
-            chatWindow.style.display = "none";
-        };
-
-        function addMessage(text, sender) {
-            const div = document.createElement("div");
-            div.textContent = text;
-            div.style.margin = "5px 0";
-            div.style.padding = "8px 12px";
-            div.style.borderRadius = "12px";
-            div.style.maxWidth = "80%";
-            if (sender === "user") {
-                div.style.background = "#4b79a1";
-                div.style.color = "white";
-                div.style.marginLeft = "auto";
-                div.style.textAlign = "right";
-            } else {
-                div.style.background = "#eee";
-                div.style.color = "#333";
-                div.style.marginRight = "auto";
-                div.style.textAlign = "left";
-            }
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        async function enviarMensaje() {
-            const mensaje = chatInput.value.trim();
-            if (!mensaje) return;
-            addMessage(mensaje, "user");
-            chatInput.value = "";
-            try {
-                const res = await fetch("/chatbot", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: mensaje }),
-                });
-                const data = await res.json();
-                addMessage(data.response, "bot");
-            } catch (e) {
-                addMessage("⚠️ Error al comunicarse con el servidor.", "bot");
-            }
-        }
-
-        chatSendBtn.onclick = enviarMensaje;
-        chatInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") enviarMensaje();
+        document.getElementById('predictionForm').addEventListener('submit', function() {
+            document.getElementById('loading').style.display = 'block';
         });
     </script>
 </body>

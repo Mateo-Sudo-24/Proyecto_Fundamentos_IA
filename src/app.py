@@ -1,19 +1,26 @@
-from flask import Flask, render_template, request, jsonify
+# app.py CORREGIDO
+
+from flask import Flask, render_template, request
 import joblib
 import pandas as pd
 import os
-import openai
+
+# Aseguramos que el directorio de modelos exista
+if not os.path.exists('models'):
+    os.makedirs('models')
 
 app = Flask(__name__, template_folder="templates")
 
-modelo_logistica = joblib.load('models/pipeline_regresion_logistica.pkl')
-modelo_arbol = joblib.load('models/pipeline_arbol_decision.pkl')
-
-# Cambia aquí según tu preferencia:
-# openai.api_key = os.getenv("OPENAI_API_KEY")  # Si usas variable entorno
-
-# O asigna directamente (sólo para pruebas rápidas):
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Cargar los modelos que ahora contienen el preprocesador
+# Asegúrate de que estos archivos .pkl existan en la carpeta 'models'
+try:
+    modelo_logistica = joblib.load('models/pipeline_regresion_logistica.pkl')
+    modelo_arbol = joblib.load('models/pipeline_arbol_decision.pkl')
+except FileNotFoundError as e:
+    print(f"Error al cargar un modelo: {e}")
+    # Considera manejar este error de manera más elegante en un entorno de producción
+    modelo_logistica = None
+    modelo_arbol = None
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -22,68 +29,43 @@ def index():
 
     if request.method == 'POST':
         try:
+            # 1. Recopilar todos los datos del formulario con los nombres correctos
             datos_formulario = {
                 'sumValTot': [float(request.form['sumValTot'])],
-                'Frecuencia': [int(request.form['Frecuencia'])],
+                'Frecuencia': [int(request.form['frecuencia'])],
                 'edad': [int(request.form['edad'])],
-                'nivelIngresos': [float(request.form['nivelIngresos'])],
+                'nivelIngresos': [request.form['nivelIngresos']],
                 'estadoCivil': [request.form['estadoCivil']],
                 'nivelEducacion': [request.form['nivelEducacion']],
                 'sexo': [request.form['sexo']],
                 'tipoVivienda': [request.form['tipoVivienda']]
             }
+            
+            # 2. Crear un DataFrame de Pandas
             input_df = pd.DataFrame(datos_formulario)
-
+            
             tipo_modelo = request.form['modelo']
-
-            if tipo_modelo == 'logistica':
+            
+            # 3. Hacer la predicción con el DataFrame
+            # Verificamos que los modelos se hayan cargado correctamente
+            if tipo_modelo == 'logistica' and modelo_logistica:
                 prediccion_array = modelo_logistica.predict(input_df)
-                prediccion = prediccion_array[0]
+                prediccion = int(prediccion_array[0])
                 modelo_usado = "Regresión Logística"
-            elif tipo_modelo == 'arbol':
+            elif tipo_modelo == 'arbol' and modelo_arbol:
                 prediccion_array = modelo_arbol.predict(input_df)
-                prediccion = prediccion_array[0]
+                prediccion = int(prediccion_array[0])
                 modelo_usado = "Árbol de Decisión"
-
+            
+            # Si no se seleccionó un modelo válido o no se cargaron, la predicción será None
+                
         except Exception as e:
+            # Puedes manejar el error de forma más específica si quieres
             print(f"Error durante la predicción: {e}")
-            prediccion = -1
+            prediccion = -1 # Un valor para indicar error
 
     return render_template('index.html', prediccion=prediccion, modelo_usado=modelo_usado)
 
-
-@app.route('/chatbot', methods=['POST'])
-def chatbot():
-    try:
-        data = request.get_json()
-        mensaje_usuario = data.get("message", "")
-
-        prompt = f"""
-Eres un asistente virtual experto en detección de actividades financieras sospechosas con base en criterios UAFE.
-Usuario pregunta: {mensaje_usuario}
-Responde de forma clara, concisa y útil.
-Si no entiendes la pregunta, di "Lo siento, no entiendo tu pregunta. Por favor intenta con otra."
-"""
-
-        respuesta = openai.ChatCompletion.create(
-            model="gpt-4o-mini",  # Cambia si quieres otro modelo
-            messages=[
-                {"role": "system", "content": "Eres un asistente experto en detección financiera."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=200,
-            n=1,
-            temperature=0.5,
-        )
-
-        texto_respuesta = respuesta.choices[0].message['content'].strip()
-
-        return jsonify({"response": texto_respuesta})
-
-    except Exception as e:
-        print(f"Error en chatbot: {e}")
-        return jsonify({"response": "⚠️ Hubo un error al procesar tu mensaje."})
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Aquí puedes cambiar host a '0.0.0.0' para acceder desde cualquier IP
+    app.run(debug=True, host='127.0.0.1', port=5000)
