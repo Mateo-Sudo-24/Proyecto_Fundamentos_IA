@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detector de Actividad Financiera</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
 </head>
 <body>
     <div class="container">
@@ -90,11 +91,17 @@
             <div class="prediction {% if prediccion == 1 %}alerta{% else %}normal{% endif %}">
                 <strong>Resultado de la Predicción ({{ modelo_usado }}):</strong><br>
                 {% if prediccion == 1 %}
-                    🚨 Actividad Sospechosa (UAFE)
+                    print(🚨 Actividad Sospechosa (UAFE))
                 {% else %}
-                    ✅ Actividad No Sospechosa
+                    print(✅ Actividad No Sospechosa)
                 {% endif %}
             </div>
+            {% endif %}
+
+            {% if error_msg %}
+                <div class="error">
+                    <strong>Error:</strong> {{ error_msg }}
+                </div>
             {% endif %}
         </section>
     </div>
